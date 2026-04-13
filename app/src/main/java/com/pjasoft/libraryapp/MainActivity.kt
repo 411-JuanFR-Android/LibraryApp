@@ -11,7 +11,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.pjasoft.libraryapp.screens.BookDetailScreen
 import com.pjasoft.libraryapp.screens.BooksScreen
+import com.pjasoft.libraryapp.screens.CounterScreen
 import com.pjasoft.libraryapp.ui.theme.LibraryAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -20,10 +27,33 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             LibraryAppTheme {
+                val navController = rememberNavController()
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    BooksScreen(
-                        innerPadding
-                    )
+                    NavHost(
+                        startDestination = "counter",
+                        navController = navController
+                    ){
+                       composable(route = "books") {
+                           BooksScreen(innerPadding,navController)
+                       }
+                        composable(
+                            route = "books/{id}",
+                            arguments = listOf(
+                                navArgument(
+                                    name = "id"
+                                ){
+                                    type= NavType.IntType
+                                    nullable=false
+                                }
+                            )
+                        ) { backStack ->
+                            val id = backStack.arguments?.getInt("id") ?: 0
+                            BookDetailScreen(id)
+                        }
+                        composable(route = "counter") {
+                            CounterScreen()
+                        }
+                    }
                 }
             }
         }

@@ -1,4 +1,4 @@
-package com.pjasoft.libraryapp.screens.components
+package com.pjasoft.libraryapp.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -33,7 +33,7 @@ import com.pjasoft.libraryapp.ui.theme.LibraryAppTheme
 @Composable
 fun PopularBook(
     book: Book,
-    onClick : () -> Unit
+    navController: NavController
 ){
     Box(
         modifier = Modifier
@@ -43,9 +43,8 @@ fun PopularBook(
             .clip(RoundedCornerShape(20.dp))
             .background(MaterialTheme.colorScheme.tertiary)
             .clickable{
-               onClick()
+                navController.navigate("books/${book.id}")
             }
-
     ) {
 
         Text(
@@ -80,7 +79,7 @@ fun PopularBookPreview(){
     LibraryAppTheme {
         PopularBook(
             book = books[1],
-            onClick = {  }
+            navController = rememberNavController()
         )
     }
 }
